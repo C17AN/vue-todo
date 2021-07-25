@@ -28,11 +28,12 @@ export default {
     return {
       isAddMode: false,
       taskName: "",
-      tasks: [
-        { id: 0, text: "손 씻고 양치하기" },
-        { id: 1, text: "토익학원 등록하기" },
-      ],
     };
+  },
+  computed: {
+    tasks() {
+      return this.$store.state.taskList;
+    },
   },
   methods: {
     setAddMode() {
@@ -44,17 +45,25 @@ export default {
     },
 
     addTask() {
-      if (this.taskName !== "") {
-        const newTask = { id: this.tasks.length, text: this.taskName };
-        this.tasks = [...this.tasks, newTask];
-        this.taskName = "";
-      } else {
-        return;
-      }
+      this.$store.commit({
+        type: "addTask",
+        task: { id: this.tasks.length, text: this.taskName },
+      });
+      // if (this.taskName !== "") {
+      //   const newTask = { id: this.tasks.length, text: this.taskName };
+      //   this.tasks = [...this.tasks, newTask];
+      //   this.taskName = "";
+      // } else {
+      //   return;
+      // }
     },
 
-    removeTask(id) {
-      this.tasks = this.tasks.filter((task) => task.id !== id);
+    removeTask() {
+      this.$store.commit({
+        type: "removeTask",
+        id: this.tasks.length - 1,
+      });
+      //this.tasks = this.tasks.filter((task) => task.id !== id);
     },
   },
   components: { AddTask, TaskList },
